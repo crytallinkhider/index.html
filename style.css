@@ -1,0 +1,16 @@
+/* Adicione isso no seu <style> para o efeito da foto */
+#panel {
+    border: 2px solid #00ffcc;
+    box-shadow: 0 0 20px #00ffcc, inset 0 0 10px #00ffcc;
+    background: rgba(0, 20, 20, 0.95);
+    border-radius: 20px;
+    padding: 25px;
+    text-shadow: 0 0 5px #00ffcc;
+}
+
+button {
+    background: linear-gradient(45deg, #004444, #000);
+    border: 1px solid #00ffcc;
+    box-shadow: 0 0 10px #00ffcc;
+}
+
