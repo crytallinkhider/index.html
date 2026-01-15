@@ -1,115 +1,34 @@
-package com.yourpackagename; // Substitua pelo seu nome de pacote
+// Dentro da sua MainActivity.java
+public class AndroidBridge {
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.Settings;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Timer;
-import java.util.TimerTask;
-
-// Para o seu "tastytoast", se você o tiver configurado como biblioteca
-// import com.sdsmdg.tastytoast.TastyToast; 
-
-public class MainActivity extends AppCompatActivity {
-
-    private WebView webView;
-    private WindowManager windowManager;
-    private View floatingView; // Para o botão flutuante
-    private WindowManager.LayoutParams floatingParams; // Parâmetros do botão flutuante
-    private Timer timer;
-    private int progress = 0; // Para a barra de progresso (exemplo)
-
-    // Definições para os pacotes do Free Fire
-    private static final String FF_NORMAL_PACKAGE = "com.dts.freefireth";
-    private static final String FF_MAX_PACKAGE = "com.dts.freefiremax";
-
-    @SuppressLint("SetJavaScriptEnabled")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // O layout da sua Activity deve ter um WebView. Ex: activity_main.xml
-        // <WebView
-        //     android:id="@+id/webview_painel"
-        //     android:layout_width="match_parent"
-        //     android:layout_height="match_parent" />
-        setContentView(R.layout.activity_main); // Garanta que seu layout tem uma WebView com ID webview_painel
-
-        webView = findViewById(R.id.webview_painel); // Seu WebView no layout
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setDomStorageEnabled(true); // Para o HTML armazenar dados se precisar
-
-        // Carrega o HTML da pasta assets
-        webView.loadUrl("file:///android_asset/index.html");
-
-        // Interface JavaScript
-        webView.addJavascriptInterface(new AndroidBridge(), "AndroidBridge");
-
-        // Opcional: Se quiser que o WebView não abra links externos no navegador
-        webView.setWebViewClient(new WebViewClient());
+    @JavascriptInterface
+    public void executarComando(String nome, String valor) {
+        // Envia valores para o seu módulo C++ ou Shell
+        runOnUiThread(() -> Toast.makeText(MainActivity.this, nome + " ajustado para " + valor, Toast.LENGTH_SHORT).show());
     }
 
-    // Classe da Ponte JavaScript
-    public class AndroidBridge {
+    @JavascriptInterface
+    public void injetarEIniciarJogo() {
+        runOnUiThread(() -> {
+            // 1. Extrai seu arquivo .so ou script da pasta assets
+            extractAsset("lib_module.so", getPackageName(), "lib_module.so");
+            
+            // 2. Dá permissão de execução (Shell)
+            try {
+                Runtime.getRuntime().exec("chmod 777 /data/data/" + getPackageName() + "/lib_module.so");
+            } catch (Exception e) {}
 
-        @JavascriptInterface
-        public void executarComando(String nomeFuncao, String valor) {
-            runOnUiThread(() -> {
-                // Toast.makeText(MainActivity.this, "Comando JS: " + nomeFuncao + " -> " + valor, Toast.LENGTH_SHORT).show();
-
-                // *** AQUI VOCÊ INTEGRARIA SEUS BLOCOS DE LÓGICA DO SKETCHWARE ***
-                // EXEMPLOS:
-
-                if (nomeFuncao.equals("toggle_aimbot")) {
-                    if (Boolean.parseBoolean(valor)) {
-                        // Ativar Aimbot - Chamar função C++ (ex: callNativeFunction("toggleAimbot", 1))
-                        showToast("Aimbot ATIVADO!");
-                    } else {
-                        // Desativar Aimbot - Chamar função C++ (ex: callNativeFunction("toggleAimbot", 0))
-                        showToast("Aimbot DESATIVADO!");
-                    }
-                } else if (nomeFuncao.equals("set_aimbot_sens")) {
-                    // Mudar sensibilidade do Aimbot - Chamar função C++ (ex: callNativeFunction("setAimbotSens", Integer.parseInt(valor)))
-                    showToast("Sensibilidade Aimbot: " + valor);
-                } else if (nomeFuncao.equals("toggle_aimlock")) {
-                    if (Boolean.parseBoolean(valor)) {
-                        // Ativar Aimlock
-                        showToast("Aim Lock ATIVADO!");
-                    } else {
-                        // Desativar Aimlock
-                        showToast("Aim Lock DESATIVADO!");
-                    }
-                } else if (nomeFuncao.equals("set_aimlock_fov")) {
-                    // Mudar FOV do Aimlock
-                    showToast("FOV Aim Lock: " + valor);
-                } else if (nomeFuncao.equals("toggle_esp")) {
-                    if (Boolean.parseBoolean(valor)) {
-                        // Ativar ESP
-                        showToast("ESP (Wallhack) ATIVADO!");
-                    } else {
+            // 3. Abre o Free Fire Automaticamente
+            Intent intent = getPackageManager().getLaunchIntentForPackage("com.dts.freefireth");
+            if (intent == null) intent = getPackageManager().getLaunchIntentForPackage("com.dts.freefiremax");
+            
+            if (intent != null) {
+                startActivity(intent);
+                Toast.makeText(MainActivity.this, "Injetado com Sucesso!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+}
                         // Desativar ESP
                         showToast("ESP (Wallhack) DESATIVADO!");
                     }
