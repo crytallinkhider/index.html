@@ -3,113 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Samuel VIP</title>
+    <title>SAMUEL MODS VIP</title>
     <style>
-        body { margin:0; background:#000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#00ff88; display:flex; justify-content:center; align-items:center; height:100vh; overflow:hidden; }
-        #login, #panel { width:280px; border:2px solid #00ff88; padding:20px; box-shadow: 0 0 25px rgba(0,255,136,0.8); border-radius:15px; background:rgba(0,0,0,0.9); transition: all 0.3s ease-in-out; }
-        #login h2, #panel h3 { text-align:center; color:#00ff88; text-shadow: 0 0 10px #00ff88; }
-        input[type="password"], input[type="range"] { width:100%; margin-top:10px; padding:10px; background:transparent; color:#00ff88; border:1px solid #00ff88; border-radius:5px; outline:none; font-size:14px; box-sizing:border-box; }
-        input[type="password"]:focus, input[type="range"]:focus { border-color:#00ffff; box-shadow: 0 0 8px rgba(0,255,255,0.5); }
-        button { width:100%; margin-top:15px; padding:10px; background:transparent; color:#00ff88; border:1px solid #00ff88; border-radius:5px; cursor:pointer; font-weight:bold; text-transform:uppercase; transition: background 0.2s, color 0.2s, box-shadow 0.2s; }
-        button:hover { background:rgba(0,255,136,0.1); box-shadow: 0 0 10px #00ff88; }
-        button:active { background:#00ff88; color:#000; box-shadow: 0 0 15px #00ff88; }
-        .section { margin-top:18px; border-top:1px solid rgba(0,255,136,0.5); padding-top:15px; }
-        .row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-        label { font-size:13px; font-weight:bold; text-transform:uppercase; color:#00ff88; }
-        input[type="checkbox"] { appearance:none; -webkit-appearance:none; width:20px; height:20px; border:1px solid #00ff88; border-radius:3px; cursor:pointer; position:relative; }
-        input[type="checkbox"]:checked { background:#00ff88; border-color:#00ff88; }
-        input[type="checkbox"]:checked::after { content:'✓'; color:#000; font-size:16px; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); }
-        input[type="range"]::-webkit-slider-thumb { background:#00ff88; border:1px solid #00ff88; } /* For Webkit browsers */
-        input[type="range"]::-moz-range-thumb { background:#00ff88; border:1px solid #00ff88; } /* For Firefox */
-        #panel { display:none; }
-        #showBtn { display:none; position:fixed; bottom:25px; right:25px; width:60px; height:60px; border-radius:50%; background:#00ff88; color:#000; border:none; font-size:1em; font-weight:bold; box-shadow: 0 0 15px #00ff88; }
-        #showBtn:hover { box-shadow: 0 0 25px #00ff88; }
-        #status { font-size:11px; text-align:center; color:#00ffff; margin-top:10px; text-shadow: 0 0 5px #00ffff; }
-        .slider-label-value { font-size:11px; color:#00ffff; margin-left: 5px; }
+        body { margin:0; background:#000; font-family: sans-serif; color:#00ff88; display:flex; justify-content:center; align-items:center; height:100vh; }
+        #login-box, #panel { 
+            width:280px; border:2px solid #00ff88; padding:20px; 
+            box-shadow: 0 0 15px #00ff88; border-radius:15px; 
+            background:rgba(0,10,10,0.9); text-align:center;
+        }
+        h2 { text-shadow: 0 0 10px #00ff88; margin-bottom:15px; }
+        input[type="password"] {
+            width: 100%; padding: 10px; margin-bottom: 10px;
+            background: rgba(0,255,136,0.1); border: 1px solid #00ff88;
+            color: #00ff88; border-radius: 5px; box-sizing: border-box;
+        }
+        .btn { 
+            width:100%; padding:12px; background:transparent; color:#00ff88; 
+            border:1px solid #00ff88; border-radius:5px; cursor:pointer; 
+            font-weight:bold; box-shadow: 0 0 5px #00ff88;
+        }
+        .section { margin-top:15px; border-top:1px solid #00ff88; padding-top:10px; text-align: left; }
+        .row { display:flex; justify-content:space-between; margin-bottom:8px; font-size: 12px; }
+        input[type="range"] { width: 100%; accent-color: #00ff88; }
     </style>
 </head>
 <body>
 
-<div id="login">
-    <h2>SAMUEL MODS VIP</h2>
-    <input type="password" id="senha" placeholder="SENHA DE ACESSO" onkeypress="if(event.key==='Enter') entrar()">
-    <button onclick="entrar()">ENTRAR NO PAINEL</button>
-    <p id="erro" style="color:#ff4444; font-size:12px; text-align:center; text-shadow: 0 0 5px #ff4444;"></p>
+<div id="login-box">
+    <h2>LOGIN</h2>
+    <input type="password" id="pass" placeholder="SENHA: painel777">
+    <button class="btn" onclick="logar()">ENTRAR</button>
 </div>
 
-<div id="panel">
-    <h3>MENU HACK FREE FIRE</h3>
+<div id="panel" style="display: none;">
+    <h2>SAMUEL MODS</h2>
+    <button class="btn" onclick="injetarEAbrir()">INJETAR & ABRIR FF</button>
     
     <div class="section">
-        <button onclick="injetarModulos()">INJETAR CHEATS & ABRIR FF</button>
-        <p id="status" class="status-message">Status: Aguardando Comando</p>
+        <div class="row"><span>AIMBOT</span><input type="checkbox" onchange="call('aim',this.checked)"></div>
+        <div class="row"><span>AIM LOCK</span><input type="checkbox" onchange="call('lock',this.checked)"></div>
+        <label style="font-size:10px">AIM FOV: <span id="v1">90</span></label>
+        <input type="range" min="10" max="500" value="90" oninput="v1.innerText=this.value" onchange="call('fov',this.value)">
     </div>
-
-    <div class="section">
-        <div class="row">
-            <label>AIMBOT</label>
-            <input type="checkbox" id="toggleAimbot" onchange="callAndroid('toggle_aimbot', this.checked)">
-        </div>
-        <label>SENSIBILIDADE AIMBOT: <span id="aimbotSensVal" class="slider-label-value">50</span></label>
-        <input type="range" min="0" max="100" value="50" oninput="document.getElementById('aimbotSensVal').innerText=this.value" onchange="callAndroid('set_aimbot_sens', this.value)">
-        
-        <div class="row">
-            <label>AIM LOCK</label>
-            <input type="checkbox" id="toggleAimlock" onchange="callAndroid('toggle_aimlock', this.checked)">
-        </div>
-        <label>FOV AIM LOCK: <span id="aimlockFovVal" class="slider-label-value">90</span></label>
-        <input type="range" min="0" max="360" value="90" oninput="document.getElementById('aimlockFovVal').innerText=this.value" onchange="callAndroid('set_aimlock_fov', this.value)">
-        
-        <div class="row">
-            <label>ESP (WALLHACK)</label>
-            <input type="checkbox" id="toggleEsp" onchange="callAndroid('toggle_esp', this.checked)">
-        </div>
-
-        <label>FOV CÂMERA: <span id="cameraFovVal" class="slider-label-value">90</span></label>
-        <input type="range" min="0" max="360" value="90" oninput="document.getElementById('cameraFovVal').innerText=this.value" onchange="callAndroid('set_camera_fov', this.value)">
-    </div>
-
-    <button onclick="ocultar()" style="color:#ff4444; border-color:#ff4444; box-shadow: 0 0 10px #ff4444;">FECHAR PAINEL</button>
 </div>
 
-<button id="showBtn" onclick="mostrar()">MENU</button>
-
 <script>
-    const senhaCorreta = "painel777";
-
-    function entrar() {
-        const senhaInput = document.getElementById('senha');
-        const erroDisplay = document.getElementById('erro');
-        if(senhaInput.value === senhaCorreta) {
-            document.getElementById('login').style.display = "none";
-            document.getElementById('panel').style.display = "block";
-            erroDisplay.innerText = "";
-        } else {
-            erroDisplay.innerText = "SENHA INCORRETA!";
-            senhaInput.value = ""; // Limpa a senha para tentar novamente
-        }
+    function logar() {
+        if(document.getElementById('pass').value === "painel777") {
+            document.getElementById('login-box').style.display='none';
+            document.getElementById('panel').style.display='block';
+        } else { alert("Senha Incorreta!"); }
     }
-
-    // Função universal para chamar o Android
-    function callAndroid(funcao, valor) {
-        if(typeof AndroidBridge !== "undefined") {
-            AndroidBridge.executarComando(funcao, valor.toString());
-            document.getElementById('status').innerText = `Comando: ${funcao} -> ${valor}`;
-        } else {
-            document.getElementById('status').innerText = "Erro: Interface AndroidBridge não encontrada!";
-        }
-    }
-
-    // Função para Injetar C++ e abrir o Free Fire
-    function injetarModulos() {
-        document.getElementById('status').innerText = "Injetando módulos e abrindo Free Fire...";
-        if(typeof AndroidBridge !== "undefined") {
-            AndroidBridge.injetarEIniciarJogo();
-        } else {
-            document.getElementById('status').innerText = "Erro: Interface AndroidBridge não encontrada!";
-        }
-    }
-
+    function call(n, v) { if(window.AndroidBridge) AndroidBridge.executarComando(n, v.toString()); }
+    function injetarEAbrir() { if(window.AndroidBridge) AndroidBridge.injetarEIniciarJogo(); }
+</script>
+</body>
+</html>
     function ocultar() { 
         document.getElementById('panel').style.display="none"; 
         document.getElementById('showBtn').style.display="block"; 
