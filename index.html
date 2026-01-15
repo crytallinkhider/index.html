@@ -5,110 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAMUEL MODS VIP</title>
     <style>
-        body { margin:0; background:#000; font-family: sans-serif; color:#00ff88; display:flex; justify-content:center; align-items:center; height:100vh; overflow:hidden; }
-        
-        #login-box, #panel { 
-            width:300px; border:2px solid #00ff88; padding:20px; 
-            box-shadow: 0 0 20px #00ff88, inset 0 0 10px #00ff88; 
-            border-radius:15px; background:rgba(0,10,10,0.95); text-align:center;
-        }
-
-        h2 { text-shadow: 0 0 10px #00ff88; margin:0 0 15px 0; font-size: 20px; }
-        
-        input[type="password"] {
-            width: 100%; padding: 12px; margin-bottom: 10px;
-            background: rgba(0,255,136,0.1); border: 1px solid #00ff88;
-            color: #00ff88; border-radius: 5px; box-sizing: border-box; outline: none;
-        }
-
-        .btn-main { 
-            width:100%; padding:12px; background:transparent; color:#00ff88; 
-            border:1px solid #00ff88; border-radius:5px; cursor:pointer; 
-            font-weight:bold; text-transform:uppercase; box-shadow: 0 0 10px #00ff88; 
-        }
-
-        .section { margin-top:15px; border-top:1px solid rgba(0,255,136,0.3); padding-top:10px; text-align: left; }
-        .row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-        
-        input[type="range"] { width: 100%; accent-color: #00ff88; cursor:pointer; }
-        .val-display { color: #00ffff; float: right; font-size: 11px; }
-        label { font-size: 11px; font-weight: bold; }
-
-        .btn-hide { background: #ff4444; color: white; border: none; padding: 5px; width: 100%; margin-top: 10px; border-radius: 5px; font-size: 10px; cursor: pointer; }
+        body { margin:0; background:#000; font-family: sans-serif; color:#00ff88; display:flex; justify-content:center; align-items:center; height:100vh; }
+        #panel { width:280px; border:2px solid #00ff88; padding:20px; box-shadow: 0 0 15px #00ff88; border-radius:15px; background:rgba(0,10,10,0.9); text-align:center; }
+        .btn-inject { width:100%; padding:15px; background:transparent; color:#00ff88; border:2px solid #00ff88; border-radius:10px; cursor:pointer; font-weight:bold; text-transform:uppercase; box-shadow: 0 0 10px #00ff88; margin-bottom: 15px; }
+        .btn-inject:active { background:#00ff88; color:#000; }
+        .section { border-top: 1px solid #00ff88; padding-top: 10px; text-align: left; font-size: 12px; }
+        .row { display: flex; justify-content: space-between; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-<div id="login-box">
-    <h2>LOGIN SAMUEL VIP</h2>
-    <input type="password" id="pass" placeholder="SENHA: painel777">
-    <button class="btn-main" onclick="logar()">ENTRAR NO PAINEL</button>
-</div>
-
-<div id="panel" style="display: none;">
+<div id="panel">
     <h2>SAMUEL MODS</h2>
-    <button class="btn-main" onclick="injetar()">INJETAR & ABRIR FF</button>
-    
-    <div class="section">
-        <div class="row">
-            <label>AIMBOT (AUTO)</label>
-            <input type="checkbox" onchange="send('toggle_aimbot', this.checked)">
-        </div>
-        
-        <label>FOV AIMLOCK: <span id="v1" class="val-display">90</span></label>
-        <input type="range" min="10" max="500" value="90" oninput="v1.innerText=this.value" onchange="send('set_aimlock_fov', this.value)">
-    </div>
+    <button class="btn-inject" onclick="acionarInjecao()">INJETAR & ABRIR FF</button>
 
     <div class="section">
-        <div class="row">
-            <label>ESP WALLHACK</label>
-            <input type="checkbox" onchange="send('toggle_esp', this.checked)">
-        </div>
-        
-        <label>DRONE VIEW: <span id="v2" class="val-display">90</span></label>
-        <input type="range" min="60" max="160" value="90" oninput="v2.innerText=this.value" onchange="send('set_camera_fov', this.value)">
+        <div class="row"><span>AIMBOT</span><input type="checkbox" onchange="send('toggle_aim', this.checked)"></div>
+        <div class="row"><span>AIM LOCK</span><input type="checkbox" onchange="send('toggle_lock', this.checked)"></div>
+        <label>FOV: <input type="range" min="10" max="500" onchange="send('set_fov', this.value)"></label>
     </div>
-
-    <button class="btn-hide" onclick="minimizar()">OCULTAR PAINEL (FLUTUANTE)</button>
 </div>
 
 <script>
-    // Função de Login
-    function logar() {
-        if(document.getElementById('pass').value === "painel777") {
-            document.getElementById('login-box').style.display='none';
-            document.getElementById('panel').style.display='block';
-            send('painel_visivel', 'true');
-        } else {
-            alert("Senha Incorreta!");
-        }
-    }
-
-    // Envia comandos para o Java (executarComando)
-    function send(nome, valor) {
-        if(typeof AndroidBridge !== "undefined") {
-            AndroidBridge.executarComando(nome, valor.toString());
-        }
-    }
-
-    // Chama a injeção e abre o jogo
-    function injetar() {
-        if(typeof AndroidBridge !== "undefined") {
+    function acionarInjecao() {
+        if (typeof AndroidBridge !== "undefined") {
             AndroidBridge.injetarEIniciarJogo();
+        } else {
+            alert("Abra dentro do App!");
         }
     }
 
-    // Esconde o painel e ativa o botão flutuante do Java
-    function minimizar() {
-        document.body.style.display = 'none'; // Esconde tudo
-        send('painel_oculto', 'true'); // Chama o createFloatingButton no Java
-    }
-
-    // Função que o Java chama para mostrar o menu de volta
-    function mostrar() {
-        document.body.style.display = 'flex';
-        send('painel_visivel', 'true');
+    function send(cmd, val) {
+        if (typeof AndroidBridge !== "undefined") {
+            AndroidBridge.executarComando(cmd, val.toString());
+        }
     }
 </script>
+</body>
+</html>
 </body>
 </html>
