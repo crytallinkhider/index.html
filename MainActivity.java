@@ -1,115 +1,31 @@
-// Dentro da sua MainActivity.java
-public class AndroidBridge {
+@android.webkit.JavascriptInterface
+public void executarComando(String nome, String valor) {
+    // Aqui os valores do FOV e Aimbot chegam ao Android
+    // Você pode salvar em SharedPreferences ou enviar para o C++
+}
 
-    @JavascriptInterface
-    public void executarComando(String nome, String valor) {
-        // Envia valores para o seu módulo C++ ou Shell
-        runOnUiThread(() -> Toast.makeText(MainActivity.this, nome + " ajustado para " + valor, Toast.LENGTH_SHORT).show());
-    }
+@android.webkit.JavascriptInterface
+public void injetarEIniciarJogo() {
+    runOnUiThread(() -> {
+        try {
+            // 1. EXTRAÇÃO DO BINÁRIO (Módulos de Cheat)
+            // extractAsset("lib_samuel.so", getPackageName(), "lib_samuel.so");
 
-    @JavascriptInterface
-    public void injetarEIniciarJogo() {
-        runOnUiThread(() -> {
-            // 1. Extrai seu arquivo .so ou script da pasta assets
-            extractAsset("lib_module.so", getPackageName(), "lib_module.so");
+            // 2. PERMISSÃO SHELL 777 (Bloco que você enviou no início)
+            Runtime.getRuntime().exec("chmod 777 /data/data/" + getPackageName() + "/lib_samuel.so");
             
-            // 2. Dá permissão de execução (Shell)
-            try {
-                Runtime.getRuntime().exec("chmod 777 /data/data/" + getPackageName() + "/lib_module.so");
-            } catch (Exception e) {}
-
-            // 3. Abre o Free Fire Automaticamente
+            // 3. ABRIR O JOGO AUTOMATICAMENTE
             Intent intent = getPackageManager().getLaunchIntentForPackage("com.dts.freefireth");
             if (intent == null) intent = getPackageManager().getLaunchIntentForPackage("com.dts.freefiremax");
             
             if (intent != null) {
                 startActivity(intent);
-                Toast.makeText(MainActivity.this, "Injetado com Sucesso!", Toast.LENGTH_LONG).show();
             }
-        });
-    }
+        } catch (Exception e) {
+            Toast.makeText(MainActivity.this, "Erro ao injetar!", Toast.LENGTH_SHORT).show();
+        }
+    });
 }
-                        // Desativar ESP
-                        showToast("ESP (Wallhack) DESATIVADO!");
-                    }
-                } else if (nomeFuncao.equals("set_camera_fov")) {
-                    // Mudar FOV da Câmera
-                    showToast("FOV Câmera: " + valor);
-                } else if (nomeFuncao.equals("painel_oculto")) {
-                    // Ocultou o painel, talvez mostrar um botão flutuante
-                    createFloatingButton();
-                } else if (nomeFuncao.equals("painel_visivel")) {
-                    // Mostrou o painel, remover botão flutuante
-                    removeFloatingButton();
-                }
-            });
-        }
-
-        @JavascriptInterface
-        public void injetarEIniciarJogo() {
-            runOnUiThread(() -> {
-                // Opcional: Mostrar uma barra de progresso ou Toast enquanto injeta
-                // showToast("Injetando módulos... aguarde!");
-                
-                // 1. Criar diretórios (Seus blocos de FileUtil.makeDir)
-                // Exemplo:
-                // FileUtil.makeDir(FileUtil.getExternalStorageDir().concat("/android/data/com.dts.freefireth/files/contentcache/compulsory/android/gameassetbundles/config/"));
-                // ... (TODOS OS SEUS MAKEDIR AQUI) ...
-
-                // 2. Extrair o binário C++ (lib_module.so) para a pasta do seu app
-                // Você precisaria ter o lib_module.so na pasta 'assets' do seu projeto Android
-                extractAsset("lib_module.so", getApplicationContext().getPackageName(), "lib_module.so");
-                
-                // 3. Dar permissão de execução (chmod 777)
-                // Isso requer ROOT ou que o arquivo esteja na sua pasta de dados
-                String modulePath = getApplicationInfo().dataDir + "/lib_module.so";
-                executeShellCommand("chmod 777 " + modulePath);
-
-                // 4. Executar o binário C++ (que agora é o 'hack')
-                // Isso também requer ROOT ou o ambiente adequado
-                executeShellCommand(modulePath);
-
-                // 5. Abrir o Free Fire
-                abrirFreeFire();
-
-                showToast("Injeção COMPLETA e Free Fire iniciado!");
-            });
-        }
-    }
-
-    // --- Funções Auxiliares para Java ---
-
-    private void showToast(String message) {
-        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-        // Se você usa TastyToast, pode substituir por:
-        // TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
-    }
-
-    private void extractAsset(String assetName, String packageName, String destFileName) {
-        try {
-            InputStream input = getAssets().open(assetName);
-            File destDir = new File("/data/data/" + packageName);
-            if (!destDir.exists()) {
-                destDir.mkdirs(); // Garante que o diretório existe
-            }
-            OutputStream output = new FileOutputStream(destDir.getAbsolutePath() + "/" + destFileName);
-            byte[] data = new byte[1024];
-            int count;
-            while ((count = input.read(data)) > 0) {
-                output.write(data, 0, count);
-            }
-            output.flush();
-            output.close();
-            input.close();
-        } catch (Exception e) {
-            showToast("Erro ao extrair asset: " + e.getMessage());
-        }
-    }
-
-    private void executeShellCommand(String command) {
-        try {
-            Runtime.getRuntime().exec(command);
-        } catch (Exception e) {
             showToast("Erro Shell: " + e.getMessage());
         }
     }
