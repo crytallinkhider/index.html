@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+
+  --color-background: #05070d;
+  --color-foreground: #f4f5ff;
+
+  --color-card: #0b0f1a;
+  --color-card-foreground: #f4f5ff;
+
+  --color-muted: #10151f;
+  --color-muted-foreground: #98a2c0;
+
+  --color-border: rgba(255, 255, 255, 0.08);
+
+  --color-primary: #ff3e8e;
+  --color-primary-foreground: #ffffff;
+
+  --color-accent: #34a8ff;
+  --color-accent-foreground: #ffffff;
+
+  --color-teal: #44ffbe;
+
+  --radius: 1rem;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  background-color: var(--color-background);
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(circle at top, rgba(255, 35, 135, 0.14), transparent 20%),
+    radial-gradient(circle at 90% 15%, rgba(52, 168, 255, 0.14), transparent 18%),
+    radial-gradient(circle at 20% 85%, rgba(68, 255, 190, 0.1), transparent 16%),
+    var(--color-background);
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--color-foreground);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
+}
+
+@media (min-width: 1024px) {
+  body {
+    cursor: none;
+  }
+  body a,
+  body button,
+  body input,
+  body textarea,
+  body select {
+    cursor: none;
+  }
+}
+
+.custom-cursor {
+  position: fixed;
+  inset: 0 auto auto 0;
+  width: 18px;
+  height: 18px;
+  border: 1.75px solid rgba(255, 255, 255, 0.86);
+  border-radius: 9999px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+  transition: width 0.16s ease, height 0.16s ease, border-color 0.16s ease,
+    background-color 0.16s ease, opacity 0.16s ease;
+  opacity: 0.92;
+  z-index: 9999;
+}
+
+.custom-cursor.hover {
+  width: 40px;
+  height: 40px;
+  border-color: rgba(255, 62, 142, 0.98);
+  background: rgba(255, 62, 142, 0.14);
+}
+
+.custom-cursor.clicked {
+  width: 14px;
+  height: 14px;
+}
+
+@media (hover: none), (max-width: 1023px) {
+  .custom-cursor {
+    display: none;
+  }
+}
+
+@keyframes float-glow {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-12px);
+    opacity: 1;
+  }
+}
